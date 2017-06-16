@@ -3,7 +3,7 @@
     "description": "Make the artisan command run from any directory in a laravel install",
     "type": "library",
     "license": "MIT",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "Hans Anderson",
