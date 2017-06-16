@@ -1,5 +1,5 @@
 {
-    "name": "ha/laravel-artisan-global",
+    "name": "ha17/laravel-artisan-global",
     "description": "Make the artisan command run from any directory in a laravel install",
     "type": "library",
     "license": "MIT",
