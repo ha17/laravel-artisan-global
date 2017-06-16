@@ -5,15 +5,15 @@
    of the project's directory.
 
 ## Install
-   composer **global** require ha17/laravel-artisan-global
+   `composer **global** require ha17/laravel-artisan-global`
    
    (important that this is global; it's the whole point. Otherwise, the normal artisan command works fine)
 
    Make sure the composer global bin in is your path by adding this to your ~/.bashrc or similar:
 
-   if [ -e "$HOME/.composer/vendor/bin" ]; then
-       export PATH="$PATH:$HOME/.composer/vendor/bin";
-   fi
+       if [ -e "$HOME/.composer/vendor/bin" ]; then
+           export PATH="$PATH:$HOME/.composer/vendor/bin";
+       fi
 
    
 
