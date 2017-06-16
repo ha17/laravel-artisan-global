@@ -1,4 +1,4 @@
-# laravel-artisan-global
+# laravel-artisan-global (1.0.0)
 
 ## Purpose
    To enable you to run 'artisan [command]' from any directory in a laravel project, without having to change to the top
