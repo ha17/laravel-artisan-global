@@ -1,6 +1,26 @@
-# This file is linked in ~/.composer/vendor/bin and invokes ./art.php
-#
-FILE=`readlink -n $0`
-DIR=`dirname $FILE`
-CMD=$(php $DIR/art.php $@)
-$CMD
+#!/usr/local/bin/php
+<?php
+
+$lookingFor   = 'artisan';
+$commandToRun = 'artisan --ansi';
+
+$dir = explode('/', getcwd());
+
+$arguments = $argv;
+array_shift($arguments);
+$artisanCommand = implode(' ', $arguments);
+
+$i=0;
+while (sizeof($dir) >= 2 && $i<20) {
+    $i++;
+    $levelUp = implode('/', $dir);
+    $artisanFile = $levelUp . '/' . $lookingFor;
+
+    array_pop($dir);
+    if (file_exists($artisanFile) && is_file($artisanFile)) {
+        break;
+    }
+}
+
+$exec = "php {$levelUp}/{$commandToRun} {$artisanCommand}";
+passthru($exec);
