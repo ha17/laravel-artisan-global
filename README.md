@@ -1,5 +1,9 @@
 # laravel-artisan-global
 
+## Purpose
+   To enable you to run 'artisan [command]' from any directory in a laravel project, without having to change to the top
+   of the project's directory.
+
 ## Install
    composer **global** require ha17/laravel-artisan-global
    

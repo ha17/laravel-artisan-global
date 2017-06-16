@@ -1,0 +1,17 @@
+{
+    "name": "ha/laravel-artisan-global",
+    "description": "Make the artisan command run from any directory in a laravel install",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hans Anderson",
+            "email": "me@ha17.com"
+        }
+    ],
+    "require": {},
+    "bin": [
+        "artisan"
+    ]
+
+}

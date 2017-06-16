@@ -1,0 +1,6 @@
+# This file is linked in ~/.composer/vendor/bin and invokes ./art.php
+#
+FILE=`readlink -n $0`
+DIR=`dirname $FILE`
+CMD=$(php $DIR/art.php $@)
+$CMD
