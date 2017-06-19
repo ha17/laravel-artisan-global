@@ -1,26 +1,109 @@
 #!/usr/local/bin/php
 <?php
 
-$lookingFor   = 'artisan';
-$commandToRun = 'artisan --ansi';
+namespace ArtisanGlobal;
 
-$dir = explode('/', getcwd());
+$artisan = new ArtisanGlobal($argv);
+$artisan->run();
 
-$arguments = $argv;
-array_shift($arguments);
-$artisanCommand = implode(' ', $arguments);
 
-$i=0;
-while (sizeof($dir) >= 2 && $i<20) {
-    $i++;
-    $levelUp = implode('/', $dir);
-    $artisanFile = $levelUp . '/' . $lookingFor;
 
-    array_pop($dir);
-    if (file_exists($artisanFile) && is_file($artisanFile)) {
-        break;
+
+
+class ArtisanGlobal
+{
+    private $lookingFor     = 'artisan';
+    private $artisanCommand = 'artisan --ansi';
+    private $checkThisManyLevels = 20;
+    private $arguments;
+
+    public function __construct($argv)
+    {
+        $this->arguments = $argv;
+    }
+
+    public function run()
+    {
+        passthru($this->getCommand());
+    }
+
+    /**
+     * get the command we'll run in passthru()
+     */
+    private function getCommand()
+    {
+        $installRoot      = $this->getInstallRoot();
+        $artisanArguments = $this->argumentsToArtisan();
+        return "php {$installRoot}/{$this->artisanCommand} {$artisanArguments}";
+    }
+
+
+    /**
+     * The whole point of this is to be able to run artisan anywhere under the project install, but we want to make sure
+     * we run *our* artisan, and not have to know or configure anything about the project to do it.
+     * Hence, we look in current directory for the command, then a level up, and one more up, etc.
+     * Return the directory when we find it.
+     *
+     * @return string
+     */
+    private function getInstallRoot()
+    {
+        $directoryToCheckForCommand = explode('/', getcwd());
+
+        $i=0;
+        while ($this->stillChecking($directoryToCheckForCommand, $i)) {
+            $i++;
+            $levelUp = implode('/', $directoryToCheckForCommand);
+            $artisanFile = $levelUp . '/' . $this->lookingFor;
+
+            if ($this->isArtisanCommandHere($artisanFile)) {
+                return implode('/', $directoryToCheckForCommand);
+            }
+
+            //
+            // Remove a directory level from the end. For example, if we were in
+            // /home/install/laravel/project/app/Http
+            // We would remove Http and be in
+            // /home/install/laravel/project/app
+            //
+            array_pop($directoryToCheckForCommand);
+        }
+    }
+
+    /**
+     * We pass the arguments passed to us, on to artisan, once we figure out where it is
+     *
+     * @return string
+     */
+    private function argumentsToArtisan()
+    {
+        $arguments = $this->arguments;
+        array_shift($arguments);
+        return implode(' ', $arguments);
+    }
+
+    /**
+     * Check to see if we are still checking, or if something changed (except finding the command) and we want to leave
+     * the loop.
+     *
+     * @return boolean
+     */
+    private function stillChecking($directoryToCheckForCommand, $i)
+    {
+        return sizeof($directoryToCheckForCommand) >= 2 && $i<$this->checkThisManyLevels;
+    }
+
+    /**
+     * Tests to see if the artisan command we are looking for is in this diretory.
+     *
+     * @return boolean
+     */
+    private function isArtisanCommandHere($artisanFile)
+    {
+        if (file_exists($artisanFile) && is_file($artisanFile)) {
+            return true;
+        }
+
+        return false;
     }
 }
-
-$exec = "php {$levelUp}/{$commandToRun} {$artisanCommand}";
-passthru($exec);
